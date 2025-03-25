@@ -4,4 +4,11 @@ version = "0.1.0"
 edition = "2024"
 authors = ["Peter Paravinja"]
 
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+path = "src/main.rs"
+name = "bde"
+
 [dependencies]

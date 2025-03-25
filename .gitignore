@@ -11,3 +11,7 @@ target/
 
 # RustRover
 .idea/
+
+.repomixignore
+repomix.config.json
+bde.xml
