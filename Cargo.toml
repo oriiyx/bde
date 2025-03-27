@@ -13,3 +13,7 @@ name = "bde"
 
 [dependencies]
 clap = { version = "4.5.34", features = ["derive"] }
+config = { version = "0.15.11", default-features = false, features = ["yaml"] }
+serde = { version = "1.0.115", features = ["derive"] }
+colored = "3.0.0"
+sqlparser = "0.55.0"

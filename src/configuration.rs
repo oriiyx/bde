@@ -4,10 +4,31 @@ use clap::{Parser, Subcommand};
 #[command(version, about, long_about = None)]
 pub struct Args {
     #[command(subcommand)]
-    cmd: Commands,
+    pub cmd: Commands,
 }
 
 #[derive(Subcommand, Debug, Clone)]
-enum Commands {
+pub enum Commands {
     Generate,
+}
+
+#[derive(serde::Deserialize)]
+pub struct Settings {
+    pub sql: SqlSettings,
+}
+
+#[derive(serde::Deserialize)]
+pub struct SqlSettings {
+    pub schemas_location: String,
+    pub queries_location: String,
+}
+
+pub fn get_configuration() -> Result<Settings, config::ConfigError> {
+    let base_path = std::env::current_dir().expect("Failed to determine the current directory");
+
+    let settings = config::Config::builder()
+        .add_source(config::File::from(base_path.join("bde.yaml")))
+        .build()?;
+
+    settings.try_deserialize::<Settings>()
 }
