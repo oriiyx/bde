@@ -37,7 +37,7 @@ pub fn analyze_schema(config: Settings) {
     }
 }
 
-fn process_sql_file(path: &Path) {
+pub fn process_sql_file(path: &Path) {
     println!("Processing SQL file: {}", path.display());
 
     match fs::read_to_string(path) {
