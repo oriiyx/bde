@@ -6,6 +6,7 @@ use std::path::Path;
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
 
     #[test]
     fn test_schema_analyzer() {
@@ -17,6 +18,7 @@ mod tests {
 
         let p = configuration.sql.schemas_location.add("/schema.sql");
         let path = Path::new(&p);
-        process_sql_file(path);
+        let content = fs::read_to_string(&path).unwrap();
+        process_sql_file(content);
     }
 }
