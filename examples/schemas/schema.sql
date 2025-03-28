@@ -6,7 +6,5 @@ CREATE TABLE users
     created_at TIMESTAMP    NOT NULL DEFAULT NOW()
 );
 
-Derp
-Table monke {
-    id SERIAL PRIMARY KEY
-};
+ALTER TABLE users
+    ADD column name VARCHAR(255) NOT NULL;
