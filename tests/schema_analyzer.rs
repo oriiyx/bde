@@ -20,6 +20,10 @@ mod tests {
         let path = Path::new(&p);
         let content = fs::read_to_string(&path).unwrap();
         let tables = process_sql_file(content).unwrap().tables;
-        assert!(0 < tables.len())
+        assert!(0 < tables.len());
+
+        // Check number of columns for user table
+        let user_table = tables.first().unwrap();
+        assert_eq!(user_table.columns.len(), 5);
     }
 }

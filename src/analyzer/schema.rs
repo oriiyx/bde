@@ -41,70 +41,82 @@ pub fn analyze_schema(config: Settings) -> Result<EngineData> {
 
 pub fn process_sql_file(content: String) -> Result<EngineData> {
     let dialect = MySqlDialect {};
-    let ast = Parser::parse_sql(&dialect, &content);
+    let ast = Parser::parse_sql(&dialect, &content)
+        .map_err(|e| anyhow!("Failed to parse Schema SQL with err: {:?}", e))?;
     let mut engine_data = EngineData { tables: vec![] };
 
-    for alloc in ast {
-        for statement in alloc {
-            match statement {
-                Statement::CreateTable(create_table) => {
-                    let mut columns: Vec<Column> = vec![];
-                    for column in create_table.columns {
-                        let mut is_nullable = true;
+    for statement in ast {
+        match statement {
+            Statement::CreateTable(create_table) => {
+                let mut columns: Vec<Column> = vec![];
+                for column_def in create_table.columns {
+                    columns.push(create_column_data(&column_def));
+                }
+                let table = Table {
+                    name: create_table.name.to_string(),
+                    columns,
+                };
+                engine_data.tables.push(table);
+            }
+            Statement::AlterTable {
+                name, operations, ..
+            } => {
+                let table_name = name.to_string();
+                let table_index = engine_data
+                    .tables
+                    .iter()
+                    .position(|existing_table| existing_table.name.eq(&table_name));
 
-                        for opt in column.options {
-                            match opt.option {
-                                ColumnOption::NotNull => is_nullable = false,
-                                _ => {
-                                    // todo - add options later on when we're defining relations, uniques, etc
-                                }
+                if let Some(table_index) = table_index {
+                    for operation in operations {
+                        match operation {
+                            AlterTableOperation::AddColumn { column_def, .. } => {
+                                // Add the column to the existing table
+                                engine_data.tables[table_index]
+                                    .columns
+                                    .push(create_column_data(&column_def));
+                            }
+                            _ => {
+                                // todo - add other operations like DropColumn, DropConstraint, AddConstraint,...
+                                println!("Unhandled alter table operation: {:?}", operation);
                             }
                         }
-
-                        let col_entry = Column {
-                            name: column.name.to_string(),
-                            data_type: DType {
-                                php_type: column.data_type.to_string(),
-                                sql_type: column.data_type,
-                                nullable: is_nullable,
-                            },
-                        };
-
-                        columns.push(col_entry);
                     }
-                    let table = Table {
-                        name: create_table.name.to_string(),
-                        columns,
-                    };
-                    engine_data.tables.push(table);
+                } else {
+                    return Err(anyhow!(
+                        "Alter table references unknown table: {}",
+                        table_name
+                    ));
                 }
-                Statement::AlterTable {
-                    name,
-                    if_exists,
-                    only,
-                    operations,
-                    location,
-                    on_cluster,
-                } => {
-                    let existing_table: Vec<&Table> = engine_data
-                        .tables
-                        .iter()
-                        .filter(|existing_table| existing_table.name.eq(&name.to_string()))
-                        .collect();
-
-                    if existing_table.len() != 1 {
-                        return Err(anyhow!(
-                            "Alter table should find 1 existing table but found: {}",
-                            existing_table.len()
-                        ));
-                    }
-                }
-                _ => {
-                    println!("Found other type: {:?}", statement);
-                }
+            }
+            _ => {
+                println!("Found other type: {:?}", statement);
             }
         }
     }
 
     Ok(engine_data)
+}
+
+fn create_column_data(column_def: &ColumnDef) -> Column {
+    let mut is_nullable = true;
+
+    for opt in &column_def.options {
+        match opt.option {
+            ColumnOption::NotNull => is_nullable = false,
+            _ => {
+                // todo - add options later on when we're defining relations, uniques, etc
+            }
+        }
+    }
+
+    let col_entry = Column {
+        name: column_def.name.to_string(),
+        data_type: DType {
+            php_type: column_def.data_type.to_string(),
+            sql_type: column_def.data_type.clone(),
+            nullable: is_nullable,
+        },
+    };
+    col_entry
 }
