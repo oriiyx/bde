@@ -1,5 +1,6 @@
 use crate::analyzer::types::{Column, DType, EngineData, Table};
 use crate::configuration::Settings;
+use crate::generator::map_sql_to_php_data_type;
 use anyhow::{Result, anyhow};
 use sqlparser::ast::*;
 use sqlparser::dialect::MySqlDialect;
@@ -104,6 +105,11 @@ fn create_column_data(column_def: &ColumnDef) -> Column {
     for opt in &column_def.options {
         match opt.option {
             ColumnOption::NotNull => is_nullable = false,
+            ColumnOption::Unique { is_primary, .. } => {
+                if is_primary {
+                    is_nullable = false
+                }
+            }
             _ => {
                 // todo - add options later on when we're defining relations, uniques, etc
             }
@@ -113,7 +119,7 @@ fn create_column_data(column_def: &ColumnDef) -> Column {
     Column {
         name: column_def.name.to_string(),
         data_type: DType {
-            php_type: column_def.data_type.to_string(),
+            php_type: map_sql_to_php_data_type(&column_def.data_type, is_nullable),
             sql_type: column_def.data_type.clone(),
             nullable: is_nullable,
         },

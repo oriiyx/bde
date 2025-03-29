@@ -1,3 +1,4 @@
+use crate::generator::PhpDataType;
 use sqlparser::ast::DataType;
 
 pub struct EngineData {
@@ -16,6 +17,6 @@ pub struct Column {
 
 pub struct DType {
     pub sql_type: DataType,
-    pub php_type: String,
+    pub php_type: PhpDataType,
     pub nullable: bool,
 }
