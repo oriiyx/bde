@@ -110,13 +110,12 @@ fn create_column_data(column_def: &ColumnDef) -> Column {
         }
     }
 
-    let col_entry = Column {
+    Column {
         name: column_def.name.to_string(),
         data_type: DType {
             php_type: column_def.data_type.to_string(),
             sql_type: column_def.data_type.clone(),
             nullable: is_nullable,
         },
-    };
-    col_entry
+    }
 }
