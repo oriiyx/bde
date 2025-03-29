@@ -19,9 +19,9 @@ class Users
     public string $email;
     
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    public \DateTime $created_at;
+    public DateTime $created_at;
     
     /**
      * @var ?string

@@ -23,7 +23,7 @@ impl fmt::Display for PhpType {
             PhpType::Bool => write!(f, "bool"),
             PhpType::Array => write!(f, "array"),
             PhpType::Mixed => write!(f, "mixed"),
-            PhpType::DateTime => write!(f, "\\DateTime"),
+            PhpType::DateTime => write!(f, "DateTime"),
             PhpType::Nullable(inner) => write!(f, "?{}", inner),
         }
     }
@@ -51,8 +51,8 @@ impl PhpDataType {
             (PhpType::Bool, true) => "?bool".to_string(),
             (PhpType::Array, false) => "array".to_string(),
             (PhpType::Array, true) => "?array".to_string(),
-            (PhpType::DateTime, false) => "\\DateTime".to_string(),
-            (PhpType::DateTime, true) => "?\\DateTime".to_string(),
+            (PhpType::DateTime, false) => "DateTime".to_string(),
+            (PhpType::DateTime, true) => "?DateTime".to_string(),
             (PhpType::Mixed, _) => "mixed".to_string(),
             (PhpType::Nullable(inner), _) => format!("?{}", inner),
         };
@@ -63,7 +63,7 @@ impl PhpDataType {
             PhpType::String => "string".to_string(),
             PhpType::Bool => "bool".to_string(),
             PhpType::Array => "array".to_string(),
-            PhpType::DateTime => "\\DateTime".to_string(),
+            PhpType::DateTime => "DateTime".to_string(),
             PhpType::Mixed => "mixed".to_string(),
             PhpType::Nullable(inner) => (**inner).to_string(),
         };
