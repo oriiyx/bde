@@ -1,0 +1,11 @@
+<?php
+
+class {{ class_name }}
+{
+    {% for column in columns %}
+    /**
+     * @var {{ column.data_type.php_type.docblock_type }}
+     */
+    public {{ column.data_type.php_type.type_hint }} ${{ column.name }};
+    {% endfor %}
+}

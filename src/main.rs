@@ -1,5 +1,6 @@
 use bde::analyzer::SchemaAnalyzer;
 use bde::configuration::{Args, Commands, get_configuration};
+use bde::generator::TemplateEngine;
 use clap::Parser;
 use colored::*;
 use std::path::Path;
@@ -47,7 +48,44 @@ fn main() {
     match args.cmd {
         Commands::Generate => {
             println!("Generate");
-            let _engine_data = SchemaAnalyzer::analyze_schema(&configuration);
+            let engine_data = SchemaAnalyzer::analyze_schema(&configuration);
+            match engine_data {
+                Ok(engine_data) => {
+                    let template_engine =
+                        TemplateEngine::new(engine_data, &configuration.sql.output);
+
+                    match template_engine {
+                        Ok(template_engine) => {
+                            let success = TemplateEngine::generate_templates(&template_engine);
+
+                            match success {
+                                Ok(_) => println!("Success"),
+                                Err(e) => {
+                                    eprintln!(
+                                        "{}: {:?}",
+                                        "Failed to generate php files:".bold().red(),
+                                        e
+                                    )
+                                }
+                            }
+                        }
+                        Err(e) => {
+                            eprintln!(
+                                "{}: {}",
+                                "Failed to create template engine:".bold().red(),
+                                e.to_string().red().bold()
+                            )
+                        }
+                    }
+                }
+                Err(e) => {
+                    eprintln!(
+                        "{}: {}",
+                        "Failed to generate output with error".red().bold(),
+                        e.to_string().red().bold()
+                    )
+                }
+            }
         }
     }
 }

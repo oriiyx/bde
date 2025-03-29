@@ -1,7 +1,8 @@
+use serde::Serialize;
 use sqlparser::ast::DataType;
 use std::fmt;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum PhpType {
     Int,
     Float,
@@ -28,10 +29,13 @@ impl fmt::Display for PhpType {
     }
 }
 
+#[derive(Serialize)]
 pub struct PhpDataType {
     pub php_type: PhpType,
     pub is_nullable: bool,
     pub docblock_type: String,
+    pub type_hint: String,
+    pub simple_type: String,
 }
 
 impl PhpDataType {
@@ -53,24 +57,7 @@ impl PhpDataType {
             (PhpType::Nullable(inner), _) => format!("?{}", inner),
         };
 
-        Self {
-            php_type,
-            is_nullable,
-            docblock_type,
-        }
-    }
-
-    // Helper methods for type information
-    pub fn type_hint(&self) -> String {
-        if self.is_nullable {
-            format!("?{}", self.simple_type())
-        } else {
-            self.simple_type()
-        }
-    }
-
-    pub fn simple_type(&self) -> String {
-        match &self.php_type {
+        let simple_type = match &php_type {
             PhpType::Int => "int".to_string(),
             PhpType::Float => "float".to_string(),
             PhpType::String => "string".to_string(),
@@ -79,6 +66,20 @@ impl PhpDataType {
             PhpType::DateTime => "\\DateTime".to_string(),
             PhpType::Mixed => "mixed".to_string(),
             PhpType::Nullable(inner) => (**inner).to_string(),
+        };
+
+        let type_hint = if is_nullable {
+            format!("?{}", &simple_type)
+        } else {
+            simple_type.clone()
+        };
+
+        Self {
+            php_type,
+            is_nullable,
+            docblock_type,
+            type_hint,
+            simple_type,
         }
     }
 }

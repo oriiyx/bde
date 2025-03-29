@@ -1,3 +1,4 @@
 sql:
-  schemas_location: "examples/schemas"
-  queries_location: "examples/queries"
+  schemas: "examples/schemas"
+  queries: "examples/queries"
+  output: "examples/output"

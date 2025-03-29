@@ -7,4 +7,4 @@ CREATE TABLE users
 );
 
 ALTER TABLE users
-    ADD column name VARCHAR(255) NOT NULL;
+    ADD column name VARCHAR(255) NULL;

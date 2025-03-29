@@ -16,5 +16,6 @@ clap = { version = "4.5.34", features = ["derive"] }
 config = { version = "0.15.11", default-features = false, features = ["yaml"] }
 serde = { version = "1.0.115", features = ["derive"] }
 colored = "3.0.0"
-sqlparser = "0.55.0"
+sqlparser = { version = "0.55.0", features = ["serde"] }
 anyhow = "1.0.97"
+tera = "1.20.0"

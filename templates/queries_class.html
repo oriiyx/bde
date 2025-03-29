@@ -1,0 +1,15 @@
+<?php
+
+class Queries
+{
+    private \PDO $pdo;
+
+    public function __construct(\PDO $pdo)
+    {
+        $this->pdo = $pdo;
+}
+
+{% for query in queries %}
+{{ query }}
+{% endfor %}
+}

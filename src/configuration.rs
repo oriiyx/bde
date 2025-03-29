@@ -19,8 +19,9 @@ pub struct Settings {
 
 #[derive(serde::Deserialize)]
 pub struct SqlSettings {
-    pub schemas_location: String,
-    pub queries_location: String,
+    pub schemas: String,
+    pub queries: String,
+    pub output: String,
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {

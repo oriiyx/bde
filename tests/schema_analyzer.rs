@@ -16,7 +16,7 @@ mod tests {
         // Try to parse the configuration
         let configuration = get_configuration().expect("Failed to parse configuration");
 
-        let p = configuration.sql.schemas_location.add("/schema.sql");
+        let p = configuration.sql.schemas.add("/schema.sql");
         let path = Path::new(&p);
         let content = fs::read_to_string(&path).unwrap();
         let tables = process_sql_file(content).unwrap().tables;
@@ -35,7 +35,7 @@ mod tests {
         // Try to parse the configuration
         let configuration = get_configuration().expect("Failed to parse configuration");
 
-        let p = configuration.sql.schemas_location.add("/schema.sql");
+        let p = configuration.sql.schemas.add("/schema.sql");
         let path = Path::new(&p);
 
         let parser = SqlFileParser::default();
@@ -52,7 +52,7 @@ mod tests {
         // Try to parse the configuration
         let configuration = get_configuration().expect("Failed to parse configuration");
 
-        let p = configuration.sql.schemas_location.add("/schema.sql");
+        let p = configuration.sql.schemas.add("/schema.sql");
         let path = Path::new(&p);
         let content = fs::read_to_string(&path).unwrap();
         let tables = process_sql_file(content).unwrap().tables;

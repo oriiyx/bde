@@ -9,7 +9,7 @@ pub struct SchemaAnalyzer;
 
 impl SchemaAnalyzer {
     pub fn analyze_schema(config: &Settings) -> Result<EngineData> {
-        let schema_dir = &config.sql.schemas_location;
+        let schema_dir = &config.sql.schemas;
         println!("Analyzing schema files in {}", schema_dir);
 
         // Use the parser to parse SQL files
