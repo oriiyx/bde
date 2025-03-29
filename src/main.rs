@@ -1,4 +1,4 @@
-use bde::analyzer::analyze_schema;
+use bde::analyzer::SchemaAnalyzer;
 use bde::configuration::{Args, Commands, get_configuration};
 use clap::Parser;
 use colored::*;
@@ -47,7 +47,7 @@ fn main() {
     match args.cmd {
         Commands::Generate => {
             println!("Generate");
-            let _engine_data = analyze_schema(configuration);
+            let _engine_data = SchemaAnalyzer::analyze_schema(&configuration);
         }
     }
 }

@@ -1,4 +1,4 @@
-use crate::generator::PhpDataType;
+use crate::analyzer::PhpDataType;
 use sqlparser::ast::DataType;
 
 pub struct EngineData {
