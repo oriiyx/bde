@@ -47,7 +47,7 @@ fn main() {
     match args.cmd {
         Commands::Generate => {
             println!("Generate");
-            analyze_schema(configuration)
+            let _engine_data = analyze_schema(configuration);
         }
     }
 }

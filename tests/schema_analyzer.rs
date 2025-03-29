@@ -19,6 +19,7 @@ mod tests {
         let p = configuration.sql.schemas_location.add("/schema.sql");
         let path = Path::new(&p);
         let content = fs::read_to_string(&path).unwrap();
-        process_sql_file(content);
+        let tables = process_sql_file(content).unwrap().tables;
+        assert!(0 < tables.len())
     }
 }
