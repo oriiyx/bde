@@ -17,8 +17,8 @@ impl TemplateEngine {
 
         // Load templates
         tera.add_raw_template(
-            "entity_class.html",
-            include_str!("../../templates/entity_class.html"),
+            "entity_class.php",
+            include_str!("../../templates/entity_class.php"),
         )
         .map_err(|e| anyhow!("Failed to load entity template: {}", e))?;
 
@@ -58,7 +58,7 @@ impl TemplateEngine {
             // Render the template
             let rendered = self
                 .tera
-                .render("entity_class.html", &context)
+                .render("entity_class.php", &context)
                 .map_err(|e| {
                     anyhow!(
                         "Failed to render entity template for {}: {:?}",
