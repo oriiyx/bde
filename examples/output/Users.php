@@ -9,6 +9,10 @@
  * @generated
  */
 
+
+namespace VendorName\Testing;
+
+
 class Users
 {
     

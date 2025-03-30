@@ -2,4 +2,4 @@ sql:
   schemas: "examples/schemas"
   queries: "examples/queries"
   output: "examples/output"
-#  namespace: "VendorName\\Testing"
+  namespace: "VendorName\\Testing"
