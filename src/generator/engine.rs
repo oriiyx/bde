@@ -1,4 +1,5 @@
 use crate::analyzer::EngineData;
+use crate::configuration::SqlSettings;
 use anyhow::{Result, anyhow};
 use std::fs;
 use std::path::Path;
@@ -8,10 +9,11 @@ pub struct TemplateEngine {
     pub engine_data: EngineData,
     tera: Tera,
     output_dir: String,
+    namespace: Option<String>,
 }
 
 impl TemplateEngine {
-    pub fn new(engine_data: EngineData, output_dir: &str) -> Result<Self> {
+    pub fn new(engine_data: EngineData, config: &SqlSettings) -> Result<Self> {
         // Initialize Tera with templates
         let mut tera = Tera::default();
 
@@ -23,7 +25,7 @@ impl TemplateEngine {
         .map_err(|e| anyhow!("Failed to load entity template: {}", e))?;
 
         // Create output directory if it doesn't exist
-        let output_path = Path::new(output_dir);
+        let output_path = Path::new(config.output.as_str());
         if !output_path.exists() {
             fs::create_dir_all(output_path)
                 .map_err(|e| anyhow!("Failed to create output directory: {}", e))?;
@@ -32,7 +34,8 @@ impl TemplateEngine {
         Ok(Self {
             engine_data,
             tera,
-            output_dir: output_dir.to_string(),
+            namespace: config.namespace.clone(),
+            output_dir: config.output.to_string(),
         })
     }
 
@@ -51,6 +54,7 @@ impl TemplateEngine {
             // Convert table name to PascalCase for class name
             let class_name = self.to_pascal_case(&table.name);
             context.insert("class_name", &class_name);
+            context.insert("namespace", &self.namespace);
 
             // Add columns to context
             context.insert("columns", &table.columns);

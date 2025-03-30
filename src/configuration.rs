@@ -22,6 +22,7 @@ pub struct SqlSettings {
     pub schemas: String,
     pub queries: String,
     pub output: String,
+    pub namespace: Option<String>,
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {

@@ -8,7 +8,11 @@
  *
  * @generated
  */
+{% if namespace is defined and namespace is string and namespace != "" %}
 
+namespace {{ namespace }};
+
+{% endif %}
 class {{ class_name }}
 {
     {% for column in columns %}

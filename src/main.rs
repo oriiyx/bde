@@ -51,8 +51,7 @@ fn main() {
             let engine_data = SchemaAnalyzer::analyze_schema(&configuration);
             match engine_data {
                 Ok(engine_data) => {
-                    let template_engine =
-                        TemplateEngine::new(engine_data, &configuration.sql.output);
+                    let template_engine = TemplateEngine::new(engine_data, &configuration.sql);
 
                     match template_engine {
                         Ok(template_engine) => {

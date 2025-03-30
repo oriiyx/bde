@@ -7,4 +7,13 @@ CREATE TABLE users
 );
 
 ALTER TABLE users
-    ADD column name VARCHAR(255) NULL;
+    ADD COLUMN name VARCHAR(255) NULL;
+
+CREATE TABLE oauth
+(
+    id               SERIAL PRIMARY KEY,
+    user_id          INT REFERENCES users (id) ON DELETE CASCADE,
+    provider         VARCHAR(255) NOT NULL,
+    provider_user_id VARCHAR(255) NOT NULL,
+    created_at       TIMESTAMP    NOT NULL DEFAULT NOW()
+);
