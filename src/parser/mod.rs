@@ -1,3 +1,5 @@
-pub mod sql;
+pub mod query;
+pub mod schema;
 
-pub use sql::*;
+pub use query::*;
+pub use schema::*;
