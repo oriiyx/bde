@@ -1,5 +1,6 @@
+use SetExpr::Select;
 use anyhow::{Result, anyhow};
-use sqlparser::ast::Statement;
+use sqlparser::ast::{SetExpr, Statement};
 use sqlparser::dialect::MySqlDialect;
 use sqlparser::parser::Parser as SqlParser;
 use std::fs;
@@ -114,4 +115,29 @@ pub struct QuerySqlFile {
 
 pub struct QueriesMap {
     pub statements: Vec<Statement>,
+}
+
+pub fn debug_statement_structure(statement: &Statement) {
+    // println!("Full statement: {:#?}", statement);
+
+    match statement {
+        Statement::Query(query) => {
+            if let Select(select) = &*query.body {
+                println!("Select statement: {:#?}", select);
+                if let Some(selection) = &select.selection {
+                    println!("WHERE clause: {:#?}", selection);
+                } else {
+                    println!("No WHERE clause found in SELECT");
+                }
+            }
+        }
+        Statement::Update { selection, .. } => {
+            if let Some(where_clause) = selection {
+                println!("WHERE clause in UPDATE: {:#?}", where_clause);
+            } else {
+                println!("No WHERE clause found in UPDATE");
+            }
+        }
+        _ => println!("Not a statement type with WHERE clause"),
+    }
 }

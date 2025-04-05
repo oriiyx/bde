@@ -1,3 +1,7 @@
+# BDE (Boring Database Engine) - On Hold
+
+## Project Status: Development **Paused**
+
 # Boring Database Engine (BDE)
 
 > A type-safe SQL toolkit for PHP built with Rust
